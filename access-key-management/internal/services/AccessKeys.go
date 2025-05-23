@@ -2,8 +2,11 @@ package services
 
 import (
 	"access-key-management/internal/models"
+	"access-key-management/internal/stream"
 	"access-key-management/pkg/utils"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 func CreateNewAccessKeys() (models.AccessKeyResponse, error) {
@@ -14,14 +17,19 @@ func CreateNewAccessKeys() (models.AccessKeyResponse, error) {
 			Expiry:    expTime,
 		},
 	}
-	token, err := utils.GenerateToken(map[string]interface{}{
-		"userId":    response.UserId,
-		"rateLimit": response.RateLimit,
-		"exp":       response.Expiry,
-	})
+	var id = uuid.New()
+	response.KeyId = id.String()
+	streamer := stream.GetStreamer()
+	err := streamer.Publish(utils.PUBLISH_TOPIC, models.EventMessage{Event: utils.ACCESSKEY_CREATED, Data: response})
 	if err != nil {
 		return models.AccessKeyResponse{}, err
 	}
-	response.Token = token
 	return response, nil
+}
+
+func DeleteAccessKeys(accessId string) error {
+	streamer := stream.GetStreamer()
+	var data = map[string]string{"keyId": accessId}
+	err := streamer.Publish(utils.PUBLISH_TOPIC, models.EventMessage{Event: utils.ACCESSKEY_DELETED, Data: data})
+	return err
 }

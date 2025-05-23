@@ -8,5 +8,10 @@ type AccessKey struct {
 
 type AccessKeyResponse struct {
 	AccessKey
-	Token string `json:"token"`
+	KeyId string `json:"keyid"`
+}
+
+type EventMessage struct {
+	Event string `json:"event"`
+	Data  any    `json:"data"`
 }

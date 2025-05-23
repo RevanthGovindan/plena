@@ -2,6 +2,7 @@ package main
 
 import (
 	"access-key-management/cmd/routes"
+	"access-key-management/internal/stream"
 	"context"
 	"log"
 	"net/http"
@@ -12,7 +13,15 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func initApp() error {
+	return stream.InitalizeStreamer()
+}
+
 func main() {
+	err := initApp()
+	if err != nil {
+		panic(err)
+	}
 	router := mux.NewRouter()
 	routes := routes.GetRoutes(router)
 	server := &http.Server{

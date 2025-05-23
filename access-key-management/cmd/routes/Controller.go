@@ -4,6 +4,8 @@ import (
 	"access-key-management/internal/services"
 	"encoding/json"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func createNewAccessKeys(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +21,14 @@ func createNewAccessKeys(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteAccessKeys(w http.ResponseWriter, r *http.Request) {
-
+	vars := mux.Vars(r)
+	err := services.DeleteAccessKeys(vars["keyId"])
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Failed"))
+		return
+	}
+	w.WriteHeader(http.StatusInternalServerError)
 }
 
 func updateAccessKeys(w http.ResponseWriter, r *http.Request) {
