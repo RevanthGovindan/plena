@@ -1,13 +1,13 @@
 package main
 
 import (
+	"access-key-management/cmd/routes"
 	"context"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
-	"web3-tokeninfo/cmd/routes"
 
 	"github.com/gorilla/mux"
 )
