@@ -7,15 +7,17 @@ import (
 	"os"
 	"os/signal"
 	"time"
+	"web3-tokeninfo/cmd/routes"
 
 	"github.com/gorilla/mux"
 )
 
 func main() {
 	router := mux.NewRouter()
+	routes := routes.GetRoutes(router)
 	server := &http.Server{
 		Addr:         ":8080",
-		Handler:      router,
+		Handler:      routes,
 		WriteTimeout: 5 * time.Second,
 		ReadTimeout:  5 * time.Second,
 	}
