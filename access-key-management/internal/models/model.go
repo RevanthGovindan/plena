@@ -15,3 +15,8 @@ type EventMessage struct {
 	Event string `json:"event"`
 	Data  any    `json:"data"`
 }
+
+type UpdateAccessKeyRequest struct {
+	RateLimit int   `json:"rateLimit"`
+	Expiry    int64 `json:"expiry"`
+}
