@@ -1,9 +1,21 @@
 package routes
 
-import "net/http"
+import (
+	"access-key-management/internal/services"
+	"encoding/json"
+	"net/http"
+)
 
 func createNewAccessKeys(w http.ResponseWriter, r *http.Request) {
-
+	resp, err := services.CreateNewAccessKeys()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Failed"))
+		return
+	}
+	respStr, _ := json.Marshal(resp)
+	w.WriteHeader(http.StatusInternalServerError)
+	w.Write(respStr)
 }
 
 func deleteAccessKeys(w http.ResponseWriter, r *http.Request) {
