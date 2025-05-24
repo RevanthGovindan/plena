@@ -29,7 +29,7 @@ func deleteAccessKeys(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Failed"))
 		return
 	}
-	w.WriteHeader(http.StatusInternalServerError)
+	w.WriteHeader(http.StatusOK)
 }
 
 func updateAccessKeys(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +47,7 @@ func updateAccessKeys(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Failed"))
 		return
 	}
-	w.WriteHeader(http.StatusInternalServerError)
+	w.WriteHeader(http.StatusOK)
 }
 
 func getAllAccessKeys(w http.ResponseWriter, r *http.Request) {
@@ -63,10 +63,25 @@ func getAllAccessKeys(w http.ResponseWriter, r *http.Request) {
 }
 
 func fetchAccessKeys(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	data, err := services.GetDataByAccessKey(vars["keyId"])
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	respStr, _ := json.Marshal(data)
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("hello"))
+	w.Write(respStr)
 }
 
 func disableAccessKeys(w http.ResponseWriter, r *http.Request) {
-
+	vars := mux.Vars(r)
+	err := services.DisableAccessKey(vars["keyId"])
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }

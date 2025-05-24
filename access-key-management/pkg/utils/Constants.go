@@ -3,6 +3,7 @@ package utils
 const (
 	STREAM_TYPE   = "redis"
 	PUBLISH_TOPIC = "events"
+	DB_TYPE       = "local"
 )
 
 // events

@@ -1,4 +1,4 @@
-DELETE http://localhost:8080/keys/1234
+DELETE http://localhost:8080/keys/91e7251a-c140-46b2-a88a-5b267c687516
 
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJldmFudGhAZ21haWwuY29tIiwiZXhwIjoxNzQ3NjM4ODc5LCJ1c2VySWQiOjJ9.ceDY5QyXWsvkV9Kpd7wmQy1VGSD1B_OAGDyb-dqyQf0
