@@ -37,6 +37,7 @@ func handleDeletion(payload models.EventMessage) error {
 }
 
 func handleUpdate(payload models.EventMessage) error {
+	database.LimiterStore.UpdateRateLimiter(payload.Data.KeyId, payload.Data.RateLimit)
 	return database.GetDb().UpdateAccessData(payload.Data.KeyId, payload.Data)
 }
 

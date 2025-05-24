@@ -1,3 +1,3 @@
-POST http://localhost:8080/keys/b1bf6568-9d97-410b-a7c1-2363d7cce222/disable
+POST http://localhost:8080/keys/0544af2c-91e9-4b20-b9db-83cc5bdbf010/disable
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJldmFudGhAZ21haWwuY29tIiwiZXhwIjoxNzQ3NjM4ODc5LCJ1c2VySWQiOjJ9.ceDY5QyXWsvkV9Kpd7wmQy1VGSD1B_OAGDyb-dqyQf0

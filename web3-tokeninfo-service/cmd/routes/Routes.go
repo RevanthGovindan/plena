@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 	"web3-tokeninfo/internal/database"
 
 	"github.com/gorilla/mux"
 )
+
+type contextKey string
 
 func requestAuthenticator(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -25,9 +28,25 @@ func requestAuthenticator(next http.Handler) http.Handler {
 			return
 		}
 
-		fmt.Println(keyData)
+		if !keyData.Enabled {
+			http.Error(w, "Access disabled", http.StatusUnauthorized)
+			return
+		}
 
-		ctx := context.WithValue(r.Context(), "userID", "user123")
+		if keyData.Expiry < time.Now().Unix() {
+			http.Error(w, "access key expired", http.StatusUnauthorized)
+			return
+		}
+
+		limiter := database.LimiterStore.GetLimiter(token, keyData.RateLimit)
+
+		if !limiter.Allow() {
+			http.Error(w, "Too many requests", http.StatusTooManyRequests)
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), contextKey("userId"), keyData.UserId)
+		fmt.Println(keyData)
 
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
