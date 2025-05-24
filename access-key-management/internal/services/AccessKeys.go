@@ -11,7 +11,19 @@ import (
 	"github.com/google/uuid"
 )
 
-func CreateNewAccessKeys() (models.AccessKeyResponse, error) {
+type AccessKeyServices struct {
+	db     database.Database
+	stream stream.Stream
+}
+
+func NewAccessKeyService() AccessKeyServices {
+	return AccessKeyServices{
+		db:     database.GetDb(),
+		stream: stream.GetStreamer(),
+	}
+}
+
+func (f *AccessKeyServices) CreateNewAccessKeys() (models.AccessKeyResponse, error) {
 	expTime := time.Now().Add(time.Hour * 2).Unix()
 	var response = models.AccessKeyResponse{
 		AccessKey: models.AccessKey{UserId: utils.GenerateRandom(),
@@ -23,32 +35,30 @@ func CreateNewAccessKeys() (models.AccessKeyResponse, error) {
 	var id = uuid.New()
 	response.KeyId = id.String()
 
-	err := database.GetDb().SaveAccessData(response.KeyId, response.AccessKey)
+	err := f.db.SaveAccessData(response.KeyId, response.AccessKey)
 	if err != nil {
 		return models.AccessKeyResponse{}, err
 	}
 
-	streamer := stream.GetStreamer()
-	err = streamer.Publish(utils.PUBLISH_TOPIC, models.EventMessage{Event: utils.ACCESSKEY_CREATED, Data: response})
+	err = f.stream.Publish(utils.PUBLISH_TOPIC, models.EventMessage{Event: utils.ACCESSKEY_CREATED, Data: response})
 	if err != nil {
 		return models.AccessKeyResponse{}, err
 	}
 	return response, nil
 }
 
-func DeleteAccessKeys(keyId string) error {
-	err := database.GetDb().DeleteAccessData(keyId)
+func (f *AccessKeyServices) DeleteAccessKeys(keyId string) error {
+	err := f.db.DeleteAccessData(keyId)
 	if err != nil {
 		return err
 	}
-	streamer := stream.GetStreamer()
 	var data = map[string]string{"keyId": keyId}
-	err = streamer.Publish(utils.PUBLISH_TOPIC, models.EventMessage{Event: utils.ACCESSKEY_DELETED, Data: data})
+	err = f.stream.Publish(utils.PUBLISH_TOPIC, models.EventMessage{Event: utils.ACCESSKEY_DELETED, Data: data})
 	return err
 }
 
-func UpdateAccessKeys(keyId string, keyData models.UpdateAccessKeyRequest) error {
-	data, err := database.GetDb().UpdateAccessData(keyId, keyData)
+func (f *AccessKeyServices) UpdateAccessKeys(keyId string, keyData models.UpdateAccessKeyRequest) error {
+	data, err := f.db.UpdateAccessData(keyId, keyData)
 	if err != nil {
 		return err
 	}
@@ -56,20 +66,20 @@ func UpdateAccessKeys(keyId string, keyData models.UpdateAccessKeyRequest) error
 		AccessKey: data,
 		KeyId:     keyId,
 	}
-	err = stream.GetStreamer().Publish(utils.PUBLISH_TOPIC, models.EventMessage{Event: utils.ACCESSKEY_UPDATED, Data: response})
+	err = f.stream.Publish(utils.PUBLISH_TOPIC, models.EventMessage{Event: utils.ACCESSKEY_UPDATED, Data: response})
 	return err
 }
 
-func GetAllAccessKeys() (map[string]models.AccessKey, error) {
-	data, err := database.GetDb().GetAllAccessData()
+func (f *AccessKeyServices) GetAllAccessKeys() (map[string]models.AccessKey, error) {
+	data, err := f.db.GetAllAccessData()
 	if err != nil {
 		return map[string]models.AccessKey{}, err
 	}
 	return data, nil
 }
 
-func GetDataByAccessKey(keyId string) (models.AccessKey, error) {
-	data, exists := database.GetDb().GetAccessData(keyId)
+func (f *AccessKeyServices) GetDataByAccessKey(keyId string) (models.AccessKey, error) {
+	data, exists := f.db.GetAccessData(keyId)
 	if !exists {
 		return models.AccessKey{}, errors.New("not found")
 	}
@@ -79,12 +89,12 @@ func GetDataByAccessKey(keyId string) (models.AccessKey, error) {
 	return data, nil
 }
 
-func DisableAccessKey(keyId string) error {
-	err := database.GetDb().DisableAccessKey(keyId)
+func (f *AccessKeyServices) DisableAccessKey(keyId string) error {
+	err := f.db.DisableAccessKey(keyId)
 	if err != nil {
 		return err
 	}
 	var data = map[string]string{"keyId": keyId}
-	err = stream.GetStreamer().Publish(utils.PUBLISH_TOPIC, models.EventMessage{Event: utils.ACCESSKEY_DISABLED, Data: data})
+	err = f.stream.Publish(utils.PUBLISH_TOPIC, models.EventMessage{Event: utils.ACCESSKEY_DISABLED, Data: data})
 	return err
 }

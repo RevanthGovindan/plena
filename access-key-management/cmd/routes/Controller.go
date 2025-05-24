@@ -10,7 +10,8 @@ import (
 )
 
 func createNewAccessKeys(w http.ResponseWriter, r *http.Request) {
-	resp, err := services.CreateNewAccessKeys()
+	serviceObj := services.NewAccessKeyService()
+	resp, err := serviceObj.CreateNewAccessKeys()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Failed"))
@@ -23,7 +24,8 @@ func createNewAccessKeys(w http.ResponseWriter, r *http.Request) {
 
 func deleteAccessKeys(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	err := services.DeleteAccessKeys(vars["keyId"])
+	serviceObj := services.NewAccessKeyService()
+	err := serviceObj.DeleteAccessKeys(vars["keyId"])
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Failed"))
@@ -34,6 +36,7 @@ func deleteAccessKeys(w http.ResponseWriter, r *http.Request) {
 
 func updateAccessKeys(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
+	serviceObj := services.NewAccessKeyService()
 	var keyData models.UpdateAccessKeyRequest
 	err := json.NewDecoder(r.Body).Decode(&keyData)
 	if err != nil {
@@ -41,7 +44,7 @@ func updateAccessKeys(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
-	err = services.UpdateAccessKeys(vars["keyId"], keyData)
+	err = serviceObj.UpdateAccessKeys(vars["keyId"], keyData)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Failed"))
@@ -51,7 +54,8 @@ func updateAccessKeys(w http.ResponseWriter, r *http.Request) {
 }
 
 func getAllAccessKeys(w http.ResponseWriter, r *http.Request) {
-	data, err := services.GetAllAccessKeys()
+	serviceObj := services.NewAccessKeyService()
+	data, err := serviceObj.GetAllAccessKeys()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Failed"))
@@ -63,8 +67,9 @@ func getAllAccessKeys(w http.ResponseWriter, r *http.Request) {
 }
 
 func fetchAccessKeys(w http.ResponseWriter, r *http.Request) {
+	serviceObj := services.NewAccessKeyService()
 	vars := mux.Vars(r)
-	data, err := services.GetDataByAccessKey(vars["keyId"])
+	data, err := serviceObj.GetDataByAccessKey(vars["keyId"])
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(err.Error()))
@@ -76,8 +81,9 @@ func fetchAccessKeys(w http.ResponseWriter, r *http.Request) {
 }
 
 func disableAccessKeys(w http.ResponseWriter, r *http.Request) {
+	serviceObj := services.NewAccessKeyService()
 	vars := mux.Vars(r)
-	err := services.DisableAccessKey(vars["keyId"])
+	err := serviceObj.DisableAccessKey(vars["keyId"])
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(err.Error()))
