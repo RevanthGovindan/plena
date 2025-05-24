@@ -38,6 +38,8 @@ func (f *Cache) GetAllAccessData() (map[string]models.AccessKey, error) {
 }
 
 func (f *Cache) DeleteAccessData(key string) error {
+	f.mu.Lock()
+	defer f.mu.Unlock()
 	delete(f.accessData, key)
 	return nil
 }

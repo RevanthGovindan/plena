@@ -52,8 +52,11 @@ func UpdateAccessKeys(keyId string, keyData models.UpdateAccessKeyRequest) error
 	if err != nil {
 		return err
 	}
-	streamer := stream.GetStreamer()
-	err = streamer.Publish(utils.PUBLISH_TOPIC, models.EventMessage{Event: utils.ACCESSKEY_UPDATED, Data: data})
+	var response models.AccessKeyResponse = models.AccessKeyResponse{
+		AccessKey: data,
+		KeyId:     keyId,
+	}
+	err = stream.GetStreamer().Publish(utils.PUBLISH_TOPIC, models.EventMessage{Event: utils.ACCESSKEY_UPDATED, Data: response})
 	return err
 }
 
