@@ -12,14 +12,16 @@ type redis struct {
 	db *goRedis.Client
 }
 
-func (f *redis) Init() error {
+func (f *redis) init() error {
 	f.db = goRedis.NewClient(&goRedis.Options{
 		Addr:     "localhost:6379",
 		Password: "",
 		DB:       0,
 	})
+	return nil
+}
 
-	// Ping to test connection
+func (f *redis) Ping() error {
 	_, err := f.db.Ping(context.Background()).Result()
 	return err
 }
@@ -31,8 +33,4 @@ func (f *redis) Publish(topic string, message models.EventMessage) error {
 	}
 	cmd := f.db.Publish(context.Background(), topic, strMsg)
 	return cmd.Err()
-}
-
-func (f *redis) Subscribe(string) error {
-	return nil
 }

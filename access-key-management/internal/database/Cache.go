@@ -17,6 +17,10 @@ func (f *Cache) init() error {
 	return nil
 }
 
+func (f *Cache) Ping() error {
+	return nil
+}
+
 func (f *Cache) SaveAccessData(key string, data models.AccessKey) error {
 	f.mu.Lock()
 	defer f.mu.Unlock()

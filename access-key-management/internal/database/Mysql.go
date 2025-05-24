@@ -15,6 +15,10 @@ func (f *MySql) init() error {
 	return err
 }
 
+func (f *MySql) Ping() error {
+	return nil
+}
+
 func (f *MySql) SaveAccessData(key string, data models.AccessKey) error {
 	return nil
 }

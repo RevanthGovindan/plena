@@ -12,13 +12,14 @@ import (
 	"web3-tokeninfo/internal/database"
 	"web3-tokeninfo/internal/services"
 	"web3-tokeninfo/internal/stream"
+	"web3-tokeninfo/pkg/middlewares"
 	"web3-tokeninfo/pkg/utils"
 
 	"github.com/gorilla/mux"
 )
 
 func initApp() error {
-	var err = errors.Join(stream.GetStreamer().Ping(), database.GetDb().Ping())
+	var err = errors.Join(stream.GetStreamer().Ping(), database.GetDb().Ping(), middlewares.InitLogger())
 	if err == nil {
 		go stream.GetStreamer().Subscribe(utils.SUBSCRIBE_TOPIC, func(msg string) {
 			services.HandleEvents(msg)

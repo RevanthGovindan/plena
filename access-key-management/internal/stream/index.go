@@ -3,27 +3,29 @@ package stream
 import (
 	"access-key-management/internal/models"
 	"access-key-management/pkg/utils"
+	"strings"
+	"sync"
 )
 
 type Stream interface {
-	Init() error
+	init() error
 	Publish(string, models.EventMessage) error
-	Subscribe(string) error
+	Ping() error
 }
 
-var streamer Stream
-
-func InitalizeStreamer() error {
-	var err error
-	if utils.STREAM_TYPE == "redis" {
-		streamer = &redis{}
-	} else {
-		streamer = &nats{}
-	}
-	err = streamer.Init()
-	return err
-}
+var (
+	streamer Stream
+	once     sync.Once
+)
 
 func GetStreamer() Stream {
+	once.Do(func() {
+		if strings.EqualFold(utils.DB_TYPE, "local") {
+			streamer = &redis{}
+		} else {
+			streamer = &nats{}
+		}
+		streamer.init()
+	})
 	return streamer
 }

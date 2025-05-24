@@ -2,8 +2,11 @@ package main
 
 import (
 	"access-key-management/cmd/routes"
+	"access-key-management/internal/database"
 	"access-key-management/internal/stream"
+	"access-key-management/pkg/middlewares"
 	"context"
+	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -14,7 +17,7 @@ import (
 )
 
 func initApp() error {
-	return stream.InitalizeStreamer()
+	return errors.Join(stream.GetStreamer().Ping(), database.GetDb().Ping(), middlewares.InitLogger())
 }
 
 func main() {

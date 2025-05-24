@@ -9,6 +9,7 @@ import (
 
 type Database interface {
 	init() error
+	Ping() error
 	SaveAccessData(key string, data models.AccessKey) error
 	DeleteAccessData(key string) error
 	UpdateAccessData(key string, data models.UpdateAccessKeyRequest) (models.AccessKey, error)
