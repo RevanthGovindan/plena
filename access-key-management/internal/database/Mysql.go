@@ -31,8 +31,8 @@ func (f *MySql) DeleteAccessData(key string) error {
 	return nil
 }
 
-func (f *MySql) UpdateAccessData(key string, data models.UpdateAccessKeyRequest) error {
-	return nil
+func (f *MySql) UpdateAccessData(key string, data models.UpdateAccessKeyRequest) (models.AccessKey, error) {
+	return models.AccessKey{}, nil
 }
 
 func (f *MySql) DisableAccessKey(key string) error {

@@ -42,17 +42,17 @@ func (f *Cache) DeleteAccessData(key string) error {
 	return nil
 }
 
-func (f *Cache) UpdateAccessData(key string, data models.UpdateAccessKeyRequest) error {
+func (f *Cache) UpdateAccessData(key string, data models.UpdateAccessKeyRequest) (models.AccessKey, error) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	prevData, exists := f.accessData[key]
 	if !exists {
-		return errors.New("not found")
+		return models.AccessKey{}, errors.New("not found")
 	}
 	prevData.Expiry = data.Expiry
 	prevData.RateLimit = data.RateLimit
 	f.accessData[key] = prevData
-	return nil
+	return prevData, nil
 }
 
 func (f *Cache) DisableAccessKey(key string) error {

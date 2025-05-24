@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,6 +10,7 @@ import (
 	"time"
 	"web3-tokeninfo/cmd/routes"
 	"web3-tokeninfo/internal/database"
+	"web3-tokeninfo/internal/services"
 	"web3-tokeninfo/internal/stream"
 	"web3-tokeninfo/pkg/utils"
 
@@ -21,7 +21,7 @@ func initApp() error {
 	var err = errors.Join(stream.GetStreamer().Ping(), database.GetDb().Ping())
 	if err == nil {
 		go stream.GetStreamer().Subscribe(utils.SUBSCRIBE_TOPIC, func(msg string) {
-			fmt.Println(msg)
+			services.HandleEvents(msg)
 		})
 	}
 	return err

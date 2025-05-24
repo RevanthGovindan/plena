@@ -12,7 +12,7 @@ type Database interface {
 	Ping() error
 	SaveAccessData(key string, data models.AccessKey) error
 	DeleteAccessData(key string) error
-	UpdateAccessData(key string, data models.UpdateAccessKeyRequest) error
+	UpdateAccessData(key string, data models.AccessKey) error
 	GetAccessData(key string) (models.AccessKey, bool)
 	DisableAccessKey(key string) error
 	GetAllAccessData() (map[string]models.AccessKey, error)

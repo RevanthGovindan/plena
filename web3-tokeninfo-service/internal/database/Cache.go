@@ -46,7 +46,7 @@ func (f *Cache) DeleteAccessData(key string) error {
 	return nil
 }
 
-func (f *Cache) UpdateAccessData(key string, data models.UpdateAccessKeyRequest) error {
+func (f *Cache) UpdateAccessData(key string, data models.AccessKey) error {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	prevData, exists := f.accessData[key]

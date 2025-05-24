@@ -1,4 +1,4 @@
-PUT http://localhost:8080/keys/f9dddffa-5796-4ffd-9ca1-3bc6c1dc188e
+PUT http://localhost:8080/keys/06c21bc5-1733-40db-88ff-b3d3d6f887db
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJldmFudGhAZ21haWwuY29tIiwiZXhwIjoxNzQ3NjM4ODc5LCJ1c2VySWQiOjJ9.ceDY5QyXWsvkV9Kpd7wmQy1VGSD1B_OAGDyb-dqyQf0
 

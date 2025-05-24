@@ -48,12 +48,11 @@ func DeleteAccessKeys(keyId string) error {
 }
 
 func UpdateAccessKeys(keyId string, keyData models.UpdateAccessKeyRequest) error {
-	err := database.GetDb().UpdateAccessData(keyId, keyData)
+	data, err := database.GetDb().UpdateAccessData(keyId, keyData)
 	if err != nil {
 		return err
 	}
 	streamer := stream.GetStreamer()
-	var data = map[string]string{"keyId": keyId}
 	err = streamer.Publish(utils.PUBLISH_TOPIC, models.EventMessage{Event: utils.ACCESSKEY_UPDATED, Data: data})
 	return err
 }
@@ -79,5 +78,10 @@ func GetDataByAccessKey(keyId string) (models.AccessKey, error) {
 
 func DisableAccessKey(keyId string) error {
 	err := database.GetDb().DisableAccessKey(keyId)
+	if err != nil {
+		return err
+	}
+	var data = map[string]string{"keyId": keyId}
+	err = stream.GetStreamer().Publish(utils.PUBLISH_TOPIC, models.EventMessage{Event: utils.ACCESSKEY_DISABLED, Data: data})
 	return err
 }
