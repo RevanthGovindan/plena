@@ -26,6 +26,10 @@ This repository provides tools and utilities for managing access keys securely a
     docker build -t token-info:latest .
     ```
 3. For event streaming **redis** pubsub has been used. Attached docker-compose.yaml for starting both microservice and redis as docker containers.
+    to run execute, 
+    ```
+        docker compose up -d
+    ```
 
 4. There is no external database used, only inmemory cache and its an interface so it can be extended database without much code changes and just by implementing methods implicitly.
 Refer internal/database/mysql/MySql.go.
