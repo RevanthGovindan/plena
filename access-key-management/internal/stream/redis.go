@@ -12,7 +12,7 @@ type redis struct {
 	db *goRedis.Client
 }
 
-func (f *redis) init() error {
+func (f *redis) Init() error {
 	f.db = goRedis.NewClient(&goRedis.Options{
 		Addr:     "localhost:6379",
 		Password: "",

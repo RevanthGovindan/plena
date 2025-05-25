@@ -4,7 +4,7 @@ import "access-key-management/internal/models"
 
 type nats struct{}
 
-func (f *nats) init() error {
+func (f *nats) Init() error {
 	return nil
 }
 

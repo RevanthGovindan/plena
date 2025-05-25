@@ -21,3 +21,8 @@ type UpdateAccessKeyRequest struct {
 	RateLimit int   `json:"rateLimit"`
 	Expiry    int64 `json:"expiry"`
 }
+
+type Config struct {
+	DbType     string `yaml:"dbtype"`
+	StreamType string `yaml:"stream-type"`
+}

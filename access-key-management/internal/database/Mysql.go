@@ -9,7 +9,7 @@ type MySql struct {
 	mysqlDb *sql.DB
 }
 
-func (f *MySql) init() error {
+func (f *MySql) Init() error {
 	var err error
 	f.mysqlDb, err = sql.Open("mysql", "")
 	return err

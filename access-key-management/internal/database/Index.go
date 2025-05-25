@@ -1,14 +1,14 @@
 package database
 
 import (
+	"access-key-management/internal/global"
 	"access-key-management/internal/models"
-	"access-key-management/pkg/utils"
 	"strings"
 	"sync"
 )
 
 type Database interface {
-	init() error
+	Init() error
 	Ping() error
 	SaveAccessData(key string, data models.AccessKey) error
 	DeleteAccessData(key string) error
@@ -25,12 +25,12 @@ var (
 
 func GetDb() Database {
 	once.Do(func() {
-		if strings.EqualFold(utils.DB_TYPE, "local") {
+		if strings.EqualFold(global.Config.DbType, "local") {
 			database = &Cache{}
 		} else {
 			database = &MySql{}
 		}
-		database.init()
+		database.Init()
 	})
 	return database
 }

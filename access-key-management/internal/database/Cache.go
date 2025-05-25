@@ -11,7 +11,7 @@ type Cache struct {
 	accessData map[string]models.AccessKey
 }
 
-func (f *Cache) init() error {
+func (f *Cache) Init() error {
 	f.mu = &sync.RWMutex{}
 	f.accessData = make(map[string]models.AccessKey)
 	return nil

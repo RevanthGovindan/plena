@@ -1,14 +1,14 @@
 package stream
 
 import (
+	"access-key-management/internal/global"
 	"access-key-management/internal/models"
-	"access-key-management/pkg/utils"
 	"strings"
 	"sync"
 )
 
 type Stream interface {
-	init() error
+	Init() error
 	Publish(string, models.EventMessage) error
 	Ping() error
 }
@@ -20,12 +20,12 @@ var (
 
 func GetStreamer() Stream {
 	once.Do(func() {
-		if strings.EqualFold(utils.DB_TYPE, "local") {
+		if strings.EqualFold(global.Config.StreamType, "local") {
 			streamer = &redis{}
 		} else {
 			streamer = &nats{}
 		}
-		streamer.init()
+		streamer.Init()
 	})
 	return streamer
 }

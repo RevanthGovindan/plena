@@ -16,7 +16,7 @@ type redis struct {
 
 func (f *redis) init() error {
 	f.db = goRedis.NewClient(&goRedis.Options{
-		Addr:     "localhost:6379",
+		Addr:     "redis:6379",
 		Password: "",
 		DB:       0,
 	})
